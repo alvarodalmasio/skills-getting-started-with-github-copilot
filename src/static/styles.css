@@ -92,6 +92,10 @@ section h3 {
 }
 
 .participants-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 6px 12px;
   margin-bottom: 5px;
   background-color: #e3f2fd;
@@ -109,6 +113,24 @@ section h3 {
   font-style: italic;
   color: #757575;
   margin-top: 5px;
+}
+
+.remove-btn {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.remove-btn:hover,
+.remove-btn:focus {
+  background-color: rgba(198, 40, 40, 0.08);
+  color: #b71c1c;
+  outline: none;
 }
 
 .form-group {

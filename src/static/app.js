@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
-      const response = await fetch("/activities");
+      const response = await fetch(`/activities?t=${Date.now()}` , { cache: "no-store" });
       const activities = await response.json();
 
       // Clear loading message
@@ -25,7 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const participantsList = details.participants.length > 0
           ? `<ul class="participants-list">
-              ${details.participants.map(email => `<li>${email}</li>`).join('')}
+              ${details.participants
+                .map(
+                  (email) => `
+                  <li class="participant-item">
+                    <span class="participant-email">${email}</span>
+                    <button class="remove-btn" data-activity="${name}" data-email="${email}" aria-label="Remove ${email}" title="Remove">
+                      🗑️
+                    </button>
+                  </li>`
+                )
+                .join("")}
             </ul>`
           : `<p class="no-participants">No participants yet. Be the first to sign up!</p>`;
 
@@ -75,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         signupForm.reset();
 
         // Refresh activities and participants list after successful signup
-        fetchActivities();
+        await fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -92,6 +102,47 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    }
+  });
+
+  // Handle unregister (delete) participant clicks via event delegation
+  activitiesList.addEventListener("click", async (event) => {
+    const btn = event.target.closest(".remove-btn");
+    if (!btn) return;
+
+    const activity = btn.getAttribute("data-activity");
+    const email = btn.getAttribute("data-email");
+
+    try {
+      const response = await fetch(
+        `/activities/${encodeURIComponent(activity)}/signup?email=${encodeURIComponent(email)}`,
+        { method: "DELETE" }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        messageDiv.textContent = result.message || "Participant removed";
+        messageDiv.className = "success";
+        // Refresh list
+        await fetchActivities();
+      } else {
+        messageDiv.textContent = result.detail || "Failed to remove participant";
+        messageDiv.className = "error";
+      }
+
+      messageDiv.classList.remove("hidden");
+      setTimeout(() => {
+        messageDiv.classList.add("hidden");
+      }, 5000);
+    } catch (error) {
+      console.error("Error removing participant:", error);
+      messageDiv.textContent = "An error occurred removing participant.";
+      messageDiv.className = "error";
+      messageDiv.classList.remove("hidden");
+      setTimeout(() => {
+        messageDiv.classList.add("hidden");
+      }, 5000);
     }
   });
 
