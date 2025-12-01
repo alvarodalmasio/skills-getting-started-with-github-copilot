@@ -41,6 +41,40 @@ activities = {
     }
 }
 
+# adicional: novas atividades (2 esportes, 2 artísticas, 2 intelectuais)
+activities.update({
+    "basketball": {
+        "description": "Partida de basquete 5x5 para estudantes de todos os níveis.",
+        "participants": [],
+        "max_participants": 10
+    },
+    "tennis": {
+        "description": "Aulas e treinos de tênis — raquetes fornecidas quando necessário.",
+        "participants": [],
+        "max_participants": 8
+    },
+    "painting": {
+        "description": "Oficina de pintura com aquarela e acrílico, materiais inclusos.",
+        "participants": [],
+        "max_participants": 12
+    },
+    "sculpture": {
+        "description": "Atelier de escultura em argila para iniciantes e intermediários.",
+        "participants": [],
+        "max_participants": 10
+    },
+    "chess_club": {
+        "description": "Clube de xadrez: aulas, partidas e pequenos torneios semanais.",
+        "participants": [],
+        "max_participants": 20
+    },
+    "robotics_workshop": {
+        "description": "Workshop de robótica e lógica para desenvolvimento de projetos práticos.",
+        "participants": [],
+        "max_participants": 15
+    }
+})
+
 
 @app.get("/")
 def root():
